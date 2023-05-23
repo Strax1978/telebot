@@ -8,10 +8,10 @@ class APIException(Exception):
 class CryptoConverter:
 
     @staticmethod
-    def convert(quantity: str, base: str, transferred: str):
+    def convert(amount: str, base: str, quote: str):
 
         if base == transferred:
-            raise APIException(f'Так и останется:{quantity} {base}-{transferred}')
+            raise APIException(f'Так и останется:{amount} {base}-{quote}')
 
         try:
             base_ticker = values[base]
@@ -19,19 +19,19 @@ class CryptoConverter:
             raise APIException(f'Не найдена валюта {base}')
 
         try:
-            transferred_ticker = values[transferred]
+            transferred_ticker = values[quote]
         except KeyError:
-            raise APIException(f'Не найдена валюта {transferred}')
+            raise APIException(f'Не найдена валюта {quote}')
 
         try:
-            quantity = float(quantity)
+            quantity = float(amount)
         except ValueError:
-            raise APIException(f'Не правильное количество {quantity}')
+            raise APIException(f'Не правильное количество {amount}')
 
 
         r = requests.get(f'https://min-api.cryptocompare.com/data/price?fsym={base_ticker}&tsyms={transferred_ticker}')
 
-        result = json.loads(r.content)[values[transferred]]
-        result *= quantity
+        result = json.loads(r.content)[values[quote]]
+        result *= amount
 
         return result
