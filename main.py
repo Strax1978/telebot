@@ -31,14 +31,14 @@ def convert_result(message: telebot.types.Message):
         if len(val) != 3:
             raise APIException('неправильный ввод')
 
-        quantity, base, transferred = val
-        result = CryptoConverter.convert(quantity, base, transferred)
+        amount, base, quote = val
+        result = CryptoConverter.convert(amount, base, quote)
     except APIException as e:
         bot.reply_to(message, f'Ошибка.\n {e}')
     except Exception as e:
         bot.reply_to(message, f'Не получилось.\n {e}')
     else:
-        text = f'{quantity}  {values[base]}({base}) будет равно:  {result}  {values[transferred]}({transferred})'
+        text = f'{amount}  {values[base]}({base}) будет равно:  {result}  {values[quote]}({quote})'
         bot.send_message(message.chat.id, text)
         bot.send_message(message.chat.id, "/menu")
 
